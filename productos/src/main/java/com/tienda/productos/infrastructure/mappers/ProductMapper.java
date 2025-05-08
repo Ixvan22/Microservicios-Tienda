@@ -6,6 +6,8 @@ import com.tienda.productos.infrastructure.dto.ProductDto;
 import com.tienda.productos.infrastructure.repositories.entities.ProductEntity;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
 
@@ -13,5 +15,7 @@ public interface ProductMapper {
   Product toDomain(ProductEntity entity);
   Product toDomain(CreateProductRequest request);
   ProductDto toDto(Product domain);
+  List<Product> toDomain(List<ProductEntity> entities);
+  List<ProductDto> toDto(List<Product> domain);
 
 }
