@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Table(name = "productos")
@@ -18,6 +19,7 @@ public class ProductEntity {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID productId;
   private String name;
+  private BigDecimal price;
   private String description;
   private int stock;
 

@@ -8,6 +8,7 @@ import com.tienda.productos.infrastructure.dto.ProductDto;
 import com.tienda.productos.infrastructure.mappers.ProductMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,22 +23,22 @@ public class ProductController {
   private final ProductMapper mapper;
 
   @PostMapping
-  public ProductDto create(@Valid @RequestBody CreateProductRequest productRequest) {
+  public ResponseEntity<ProductDto> create(@Valid @RequestBody CreateProductRequest productRequest) {
     productRequest.setDescription(productRequest.getDescription() != null ? productRequest.getDescription() : "");
     productRequest.setStock(productRequest.getStock() != null ? productRequest.getStock() : 0);
     Product product = mapper.toDomain(productRequest);
 
-    return mapper.toDto(createProductUseCase.execute(product));
+    return ResponseEntity.ok(mapper.toDto(createProductUseCase.execute(product)));
   }
 
   @GetMapping
-  public List<ProductDto> listAll() {
-    return mapper.toDto(listProductUseCase.listAll());
+  public ResponseEntity<List<ProductDto>> listAll() {
+    return ResponseEntity.ok(mapper.toDto(listProductUseCase.listAll()));
   }
 
   @GetMapping("/{name}/")
-  public ProductDto list(@PathVariable String name) {
-    return mapper.toDto(listProductUseCase.list(name));
+  public ResponseEntity<ProductDto> list(@PathVariable String name) {
+    return ResponseEntity.ok(mapper.toDto(listProductUseCase.list(name)));
   }
 
 }
