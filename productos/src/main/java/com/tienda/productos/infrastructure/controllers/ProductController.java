@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/products/")
@@ -36,9 +38,14 @@ public class ProductController {
     return ResponseEntity.ok(mapper.toDto(listProductUseCase.listAll()));
   }
 
-  @GetMapping("/{name}/")
+  @GetMapping("/{name}")
   public ResponseEntity<ProductDto> list(@PathVariable String name) {
     return ResponseEntity.ok(mapper.toDto(listProductUseCase.list(name)));
+  }
+
+  @GetMapping("/{id}/price")
+  public ResponseEntity<BigDecimal> listPriceById(@PathVariable String id) {
+    return ResponseEntity.ok(listProductUseCase.listPrice(UUID.fromString(id)));
   }
 
 }

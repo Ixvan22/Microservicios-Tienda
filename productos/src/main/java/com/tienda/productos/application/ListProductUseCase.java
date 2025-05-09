@@ -5,7 +5,9 @@ import com.tienda.productos.domain.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -21,4 +23,7 @@ public class ListProductUseCase {
     return repository.listProduct(name);
   }
 
+  public BigDecimal listPrice(UUID productId) {
+    return repository.listPriceById(productId);
+  }
 }

@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
@@ -32,6 +34,12 @@ public class ProductRepositoryImpl implements ProductRepository {
   @Override
   public Product listProduct(String name) {
     return mapper.toDomain(repository.findByName(name));
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public BigDecimal listPriceById(UUID productId) {
+    return repository.findPriceByProductId(productId);
   }
 
 }
