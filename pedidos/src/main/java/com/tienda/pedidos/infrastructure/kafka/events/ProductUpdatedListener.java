@@ -1,6 +1,5 @@
 package com.tienda.pedidos.infrastructure.kafka.events;
 
-import com.tienda.pedidos.domain.repositories.ProductRepository;
 import com.tienda.pedidos.infrastructure.kafka.models.ProductUpdatedEvent;
 import com.tienda.pedidos.infrastructure.mappers.ProductMapper;
 import com.tienda.pedidos.infrastructure.repositories.ProductPriceRepositoryJpa;
@@ -21,7 +20,6 @@ public class ProductUpdatedListener {
           containerFactory = "kafkaListenerContainerFactory"
   )
   public void listen(ProductUpdatedEvent event) {
-    System.out.println("EVENT: " + event);
     repository.save(mapper.toEntity(event));
   }
 

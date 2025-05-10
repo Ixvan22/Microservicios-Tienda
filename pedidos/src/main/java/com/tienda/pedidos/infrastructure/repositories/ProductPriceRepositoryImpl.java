@@ -1,17 +1,15 @@
 package com.tienda.pedidos.infrastructure.repositories;
 
-import com.tienda.pedidos.domain.repositories.ProductRepository;
+import com.tienda.pedidos.domain.repositories.ProductPriceRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class ProductRepositoryImpl implements ProductRepository {
+public class ProductPriceRepositoryImpl implements ProductPriceRepository {
 
   private final ProductPriceRepositoryJpa repository;
 

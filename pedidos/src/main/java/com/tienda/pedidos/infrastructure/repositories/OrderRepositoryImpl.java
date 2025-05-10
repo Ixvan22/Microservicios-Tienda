@@ -2,6 +2,8 @@ package com.tienda.pedidos.infrastructure.repositories;
 
 import com.tienda.pedidos.domain.models.Order;
 import com.tienda.pedidos.domain.repositories.OrderRepository;
+import com.tienda.pedidos.infrastructure.kafka.events.ReservedStockEventProducer;
+import com.tienda.pedidos.infrastructure.kafka.models.ReservedStockEvent;
 import com.tienda.pedidos.infrastructure.mappers.OrderMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,10 +17,20 @@ public class OrderRepositoryImpl implements OrderRepository {
 
   private final OrderRespositoryJpa respository;
   private final OrderMapper mapper;
+  private final ReservedStockEventProducer reservedStockEventProducer;
 
   @Override
   public Order create(Order order) {
-    return mapper.toDomain(respository.save(mapper.toEntity(order)));
+    Order orderDb = mapper.toDomain(respository.save(mapper.toEntity(order)));
+
+    if (orderDb == null) {
+      throw new RuntimeException("Error al crear el pedido");
+    }
+
+    ReservedStockEvent reservedStockEvent = new ReservedStockEvent(orderDb.getOrderId(), order.getItems());
+    reservedStockEventProducer.sendReservedStock(reservedStockEvent);
+
+    return orderDb;
   }
 
   @Override

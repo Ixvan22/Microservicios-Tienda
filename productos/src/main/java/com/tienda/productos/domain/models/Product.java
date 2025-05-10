@@ -17,5 +17,6 @@ public class Product {
   private BigDecimal price;
   private String description;
   private int stock;
+  private int reservedStock;
 
 }

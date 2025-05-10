@@ -4,7 +4,7 @@ import com.tienda.pedidos.domain.models.Order;
 import com.tienda.pedidos.domain.models.OrderItem;
 import com.tienda.pedidos.domain.models.OrderStatus;
 import com.tienda.pedidos.domain.repositories.OrderRepository;
-import com.tienda.pedidos.domain.repositories.ProductRepository;
+import com.tienda.pedidos.domain.repositories.ProductPriceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public class CreateOrderUseCase {
 
   private final OrderRepository repository;
-  private final ProductRepository productRepository;
+  private final ProductPriceRepository productRepository;
 
   public Order execute(List<OrderItem> products) {
     BigDecimal total = BigDecimal.ZERO;
