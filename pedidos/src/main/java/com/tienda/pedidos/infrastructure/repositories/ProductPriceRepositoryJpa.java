@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ProductPriceRepositoryJpa extends JpaRepository<ProductPriceEntity, UUID> {
 
-  //@Query("SELECT p.price FROM ProductPriceEntity p WHERE p.productId = :productId")
+  @Query("SELECT p.price FROM ProductPriceEntity p WHERE p.productId = :productId")
   BigDecimal findPriceByProductId(UUID productId);
 
 }

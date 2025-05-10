@@ -24,6 +24,9 @@ public class CreateOrderUseCase {
 
     for (OrderItem item: products) {
       BigDecimal price = productRepository.getPriceByProductId(item.getProductId());
+      if (price == null) {
+        throw new RuntimeException("Error. Producto no encontrado");
+      }
       BigDecimal itemTotal = price.multiply(BigDecimal.valueOf(item.getQuantity()));
 
       total = total.add(itemTotal);
