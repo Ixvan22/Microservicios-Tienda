@@ -13,8 +13,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
 
-  private final WebClient.Builder client;
+  private final ProductPriceRepositoryJpa repository;
 
+  @Override
+  public BigDecimal getPriceByProductId(UUID productId) {
+    return repository.findPriceByProductId(productId);
+  }
+
+  // private final WebClient.Builder client;
+
+  /*
   @Override
   public BigDecimal getPriceByProductId(UUID productId) {
     return client.build()
@@ -25,4 +33,5 @@ public class ProductRepositoryImpl implements ProductRepository {
             .bodyToFlux(BigDecimal.class)
             .blockFirst();
   }
+  */
 }
