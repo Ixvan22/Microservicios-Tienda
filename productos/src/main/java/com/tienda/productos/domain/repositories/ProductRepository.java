@@ -8,7 +8,8 @@ import java.util.UUID;
 
 public interface ProductRepository {
 
-  Product create(Product product);
+  Product create(Product product) throws Exception;
+  Product update(Product product) throws Exception;
   List<Product> listAll();
   Product listProduct(String name);
   BigDecimal listPriceById(UUID productId);

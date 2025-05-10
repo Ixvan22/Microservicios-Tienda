@@ -24,15 +24,34 @@ public class ProductRepositoryImpl implements ProductRepository {
 
   @Transactional
   @Override
-  public Product create(Product product) {
+  public Product create(Product product) throws Exception {
     Product productDb = mapper.toDomain(repository.save(mapper.toEntity(product)));
     if (productDb == null) {
-      throw new RuntimeException("Error al crear el producto");
+      throw new Exception("Error al crear el producto");
     }
 
     ProductUpdatedEvent productUpdatedEvent = new ProductUpdatedEvent(productDb.getProductId(), productDb.getPrice(), LocalDateTime.now());
     productUpdatedEventProducer.sendProductUpdated(productUpdatedEvent);
 
+    return productDb;
+  }
+
+  @Override
+  public Product update(Product product) throws Exception {
+    Product existingProduct = mapper.toDomain(repository.findById(product.getProductId()).orElseThrow());
+    existingProduct.setName(product.getName());
+    existingProduct.setDescription(product.getDescription());
+    existingProduct.setPrice(product.getPrice());
+    existingProduct.setStock(product.getStock());
+
+
+    Product productDb = mapper.toDomain(repository.save(mapper.toEntity(existingProduct)));
+    if (productDb == null) {
+      throw new Exception("Error al actualizar el producto");
+    }
+
+    ProductUpdatedEvent productUpdatedEvent = new ProductUpdatedEvent(productDb.getProductId(), productDb.getPrice(), LocalDateTime.now());
+    productUpdatedEventProducer.sendProductUpdated(productUpdatedEvent);
     return productDb;
   }
 

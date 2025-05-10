@@ -7,12 +7,13 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class CreateProductUseCase {
+public class UpdateProductUseCase {
 
   private final ProductRepository repository;
 
   public Product execute(Product product) throws Exception {
-    return repository.create(product);
+    return repository.update(product);
   }
+
 
 }

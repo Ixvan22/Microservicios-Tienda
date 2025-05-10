@@ -2,12 +2,16 @@ package com.tienda.productos.infrastructure.controllers;
 
 import com.tienda.productos.application.CreateProductUseCase;
 import com.tienda.productos.application.ListProductUseCase;
+import com.tienda.productos.application.UpdateProductUseCase;
 import com.tienda.productos.domain.models.Product;
 import com.tienda.productos.infrastructure.dto.CreateProductRequest;
 import com.tienda.productos.infrastructure.dto.ProductDto;
+import com.tienda.productos.infrastructure.dto.UpdateProductRequest;
 import com.tienda.productos.infrastructure.mappers.ProductMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +25,7 @@ import java.util.UUID;
 public class ProductController {
 
   private final CreateProductUseCase createProductUseCase;
+  private final UpdateProductUseCase updateProductUseCase;
   private final ListProductUseCase listProductUseCase;
   private final ProductMapper mapper;
 
@@ -30,7 +35,20 @@ public class ProductController {
     productRequest.setStock(productRequest.getStock() != null ? productRequest.getStock() : 0);
     Product product = mapper.toDomain(productRequest);
 
-    return ResponseEntity.ok(mapper.toDto(createProductUseCase.execute(product)));
+    try {
+      return ResponseEntity.ok(mapper.toDto(createProductUseCase.execute(product)));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+  }
+
+  @PutMapping
+  public ResponseEntity<ProductDto> update(@RequestBody UpdateProductRequest productRequest) {
+    try {
+      return ResponseEntity.ok(mapper.toDto(updateProductUseCase.execute(mapper.toDomain(productRequest))));
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
   }
 
   @GetMapping
