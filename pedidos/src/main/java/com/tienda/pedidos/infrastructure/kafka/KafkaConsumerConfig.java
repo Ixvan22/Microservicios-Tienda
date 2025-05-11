@@ -1,6 +1,7 @@
 package com.tienda.pedidos.infrastructure.kafka;
 
 import com.tienda.pedidos.infrastructure.kafka.models.ProductUpdatedEvent;
+import com.tienda.pedidos.infrastructure.kafka.models.ReservedStockStatusEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,9 +50,27 @@ public class KafkaConsumerConfig {
   }
 
   @Bean
-  public ConcurrentKafkaListenerContainerFactory<String, ProductUpdatedEvent> kafkaListenerContainerFactory(
+  public ConcurrentKafkaListenerContainerFactory<String, ProductUpdatedEvent> productUpdatedEventConcurrentKafkaListenerContainerFactory(
           ConsumerFactory<String, ProductUpdatedEvent> consumerFactory) {
     ConcurrentKafkaListenerContainerFactory<String, ProductUpdatedEvent> factory =
+            new ConcurrentKafkaListenerContainerFactory<>();
+    factory.setConsumerFactory(consumerFactory);
+    return factory;
+  }
+
+  // --- ReservedStockStatusEvent config
+  @Bean
+  public ConsumerFactory<String, ReservedStockStatusEvent> reservedStockStatusEventConsumerFactory() {
+    Map<String, Object> props = baseProps();
+    props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
+    props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, ReservedStockStatusEvent.class.getName());
+    return new DefaultKafkaConsumerFactory<>(props);
+  }
+
+  @Bean
+  public ConcurrentKafkaListenerContainerFactory<String, ReservedStockStatusEvent> reservedStockStatusEventConcurrentKafkaListenerContainerFactory(
+          ConsumerFactory<String, ReservedStockStatusEvent> consumerFactory) {
+    ConcurrentKafkaListenerContainerFactory<String, ReservedStockStatusEvent> factory =
             new ConcurrentKafkaListenerContainerFactory<>();
     factory.setConsumerFactory(consumerFactory);
     return factory;

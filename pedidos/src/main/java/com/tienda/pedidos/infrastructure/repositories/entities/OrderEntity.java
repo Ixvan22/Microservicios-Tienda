@@ -24,7 +24,7 @@ public class OrderEntity {
 
   @ElementCollection
   @CollectionTable(name = "pedidos_productos", joinColumns = @JoinColumn(name = "order_id"))
-  private List<OrderItem> items;
+  private List<OrderItemEntity> items;
 
   private BigDecimal total;
 

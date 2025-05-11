@@ -41,7 +41,7 @@ public class KafkaConsumerConfig {
 
   // --- ProductUpdatedEvent config
   @Bean
-  public ConsumerFactory<String, ReservedStockEvent> productUpdatedConsumerFactory() {
+  public ConsumerFactory<String, ReservedStockEvent> reservedStockEventConsumerFactory() {
     Map<String, Object> props = baseProps();
     props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
     props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, ReservedStockEvent.class.getName());
@@ -56,6 +56,7 @@ public class KafkaConsumerConfig {
     factory.setConsumerFactory(consumerFactory);
     return factory;
   }
+
 
 }
 

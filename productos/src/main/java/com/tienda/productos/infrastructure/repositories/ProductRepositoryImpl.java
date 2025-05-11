@@ -38,7 +38,12 @@ public class ProductRepositoryImpl implements ProductRepository {
 
   @Override
   public Product update(Product product) throws Exception {
+
     Product existingProduct = mapper.toDomain(repository.findById(product.getProductId()).orElseThrow());
+
+    boolean sendProductUpdated = false;
+    if (!existingProduct.getPrice().equals(product.getPrice())) sendProductUpdated = true;
+
     existingProduct.setName(product.getName());
     existingProduct.setDescription(product.getDescription());
     existingProduct.setPrice(product.getPrice());
@@ -50,8 +55,10 @@ public class ProductRepositoryImpl implements ProductRepository {
       throw new Exception("Error al actualizar el producto");
     }
 
-    ProductUpdatedEvent productUpdatedEvent = new ProductUpdatedEvent(productDb.getProductId(), productDb.getPrice(), LocalDateTime.now());
-    productUpdatedEventProducer.sendProductUpdated(productUpdatedEvent);
+    if (sendProductUpdated) {
+      ProductUpdatedEvent productUpdatedEvent = new ProductUpdatedEvent(productDb.getProductId(), productDb.getPrice(), LocalDateTime.now());
+      productUpdatedEventProducer.sendProductUpdated(productUpdatedEvent);
+    }
     return productDb;
   }
 

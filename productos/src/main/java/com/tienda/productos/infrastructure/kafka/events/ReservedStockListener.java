@@ -3,6 +3,7 @@ package com.tienda.productos.infrastructure.kafka.events;
 import com.tienda.productos.infrastructure.dto.StockDto;
 import com.tienda.productos.infrastructure.kafka.models.OrderItem;
 import com.tienda.productos.infrastructure.kafka.models.ReservedStockEvent;
+import com.tienda.productos.infrastructure.kafka.models.ReservedStockStatusEvent;
 import com.tienda.productos.infrastructure.repositories.ProductRepositoryJpa;
 import com.tienda.productos.infrastructure.repositories.entities.ProductEntity;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservedStockListener {
 
   private final ProductRepositoryJpa repository;
+  private final ReservedStockStatusEventProducer reservedStockStatusEventProducer;
 
   @Transactional
   @KafkaListener(
@@ -41,8 +43,10 @@ public class ReservedStockListener {
     }
 
     if (!sufficientStock) {
+      reservedStockStatusEventProducer.sendStatusReservedStock(new ReservedStockStatusEvent(event.getOrderId(), false));
       throw new RuntimeException("No hay stock disponible");
     }
+    reservedStockStatusEventProducer.sendStatusReservedStock(new ReservedStockStatusEvent(event.getOrderId(), true));
 
   }
 

@@ -15,7 +15,7 @@ import java.util.UUID;
 @Component
 public class OrderRepositoryImpl implements OrderRepository {
 
-  private final OrderRespositoryJpa respository;
+  private final OrderRepositoryJpa respository;
   private final OrderMapper mapper;
   private final ReservedStockEventProducer reservedStockEventProducer;
 

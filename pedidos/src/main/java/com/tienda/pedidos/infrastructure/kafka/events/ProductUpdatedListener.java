@@ -17,7 +17,7 @@ public class ProductUpdatedListener {
   @KafkaListener(
           topics = "product-updated",
           groupId = "order-service",
-          containerFactory = "kafkaListenerContainerFactory"
+          containerFactory = "productUpdatedEventConcurrentKafkaListenerContainerFactory"
   )
   public void listen(ProductUpdatedEvent event) {
     repository.save(mapper.toEntity(event));
