@@ -33,6 +33,9 @@ public class ReservedStockStatusListener {
       orderDb.setStatus(OrderStatus.CONFIRMED);
 
       List<OrderItemEntity> items = repository.findItemsByOrderId(orderDb.getOrderId());
+
+      // se podria añadir un metodo de pago y si falla enviar sendOrderFailed
+
       orderConfirmedEventProducer.sendOrderConfirmed(new ReservedStockEvent(event.getOrderId(), mapper.toListDomain(items)));
     } else {
       orderDb.setStatus(OrderStatus.CANCELLED);

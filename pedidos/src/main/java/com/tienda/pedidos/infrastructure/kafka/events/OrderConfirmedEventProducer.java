@@ -15,4 +15,8 @@ public class OrderConfirmedEventProducer {
     kafkaTemplate.send("order-confirmed", event.getOrderId().toString(), event);
   }
 
+  public void sendOrderFailed(ReservedStockEvent event) {
+    kafkaTemplate.send("order-failed", event.getOrderId().toString(), event);
+  }
+
 }

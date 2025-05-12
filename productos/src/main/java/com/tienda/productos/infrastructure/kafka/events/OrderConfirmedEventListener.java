@@ -33,4 +33,20 @@ public class OrderConfirmedEventListener {
       updateProductUseCase.execute(mapper.toDomain(productDb));
     }
   }
+
+  @Transactional
+  @KafkaListener(
+          topics = "order-failed",
+          groupId = "order-service",
+          containerFactory = "kafkaListenerContainerFactory"
+  )
+  public void listenFailed(ReservedStockEvent event) throws Exception {
+    for (OrderItem item : event.getItems()) {
+      ProductEntity productDb = repository.findById(item.getProductId()).orElseThrow();
+      productDb.setStock(productDb.getStock() + item.getQuantity());
+      productDb.setReservedStock(productDb.getReservedStock() - item.getQuantity());
+
+      updateProductUseCase.execute(mapper.toDomain(productDb));
+    }
+  }
 }
