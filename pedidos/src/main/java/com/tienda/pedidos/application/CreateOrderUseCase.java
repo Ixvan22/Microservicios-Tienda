@@ -32,7 +32,7 @@ public class CreateOrderUseCase {
       total = total.add(itemTotal);
     }
 
-    Order order = new Order(null, products, total, OrderStatus.PENDING, LocalDateTime.now());
+    Order order = new Order(null, products, total, OrderStatus.PENDING_STOCK, LocalDateTime.now());
 
     return repository.create(order);
   }
