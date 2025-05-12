@@ -16,6 +16,7 @@ public interface OrderMapper {
   Order toDomain(OrderEntity entity);
   List<Order> toDomain(List<OrderEntity> entities);
   OrderDto toDto(Order domain);
+  List<OrderDto> toDto(List<Order> domain);
   List<OrderItemEntity> toEntities(List<OrderItem> domain);
   List<OrderItem> toListDomain(List<OrderItemEntity> entities);
 
