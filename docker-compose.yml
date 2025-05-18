@@ -8,6 +8,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - tienda
 
   kafka:
     container_name: kafka
@@ -24,3 +26,80 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - tienda
+
+  mysql8-tienda:
+    container_name: mysql8-tienda
+    image: mysql:8.4.3
+    ports:
+      - "3307:3306"
+    restart: always
+    networks:
+      - tienda
+    environment:
+      MYSQL_DATABASE: db_tienda
+      MYSQL_ROOT_PASSWORD: 1234
+
+  eureka-server-tienda:
+    container_name: eureka-server-tienda
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
+    networks:
+      - tienda
+
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server-tienda
+    networks:
+      - tienda
+
+  productos:
+    container_name: productos
+    build:
+      context: ./productos
+      dockerfile: Dockerfile
+    depends_on:
+      - eureka-server-tienda
+      - gateway
+      - kafka
+      - mysql8-tienda
+    networks:
+      - tienda
+
+  pedidos:
+    container_name: pedidos
+    build:
+      context: ./pedidos
+      dockerfile: Dockerfile
+    depends_on:
+      - eureka-server-tienda
+      - gateway
+      - kafka
+      - mysql8-tienda
+    networks:
+      - tienda
+
+  pagos:
+    container_name: pagos
+    build:
+      context: ./pagos
+      dockerfile: Dockerfile
+    depends_on:
+      - eureka-server-tienda
+      - gateway
+      - kafka
+    networks:
+      - tienda
+
+networks:
+  tienda:
