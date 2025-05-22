@@ -26,6 +26,12 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "kafka", "9092" ]
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      timeout: 30s
     networks:
       - tienda
 
@@ -60,6 +66,8 @@ services:
       - "8090:8090"
     depends_on:
       - eureka-server-tienda
+      - productos
+      - pedidos
     networks:
       - tienda
 
@@ -70,7 +78,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - eureka-server-tienda
-      - gateway
       - kafka
       - mysql8-tienda
     networks:
@@ -83,7 +90,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - eureka-server-tienda
-      - gateway
       - kafka
       - mysql8-tienda
     networks:
@@ -96,7 +102,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - eureka-server-tienda
-      - gateway
       - kafka
     networks:
       - tienda
